@@ -1,0 +1,34 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+sub remove_execute_bit
+{
+    my $attrs_line = shift;
+
+    my %translate = ('kxtext' => 'ktext',
+                     'xtext' => 'text',
+                     'binary+Dx' => 'binary+D',
+                     'xbinary' => 'binary');
+
+    die "can't fine translation from [$attrs_line]"
+        unless ($translate{$attrs_line});
+
+    return $translate{$attrs_line};
+}
+
+die "it must be one argument which points to a file to clear exec bit"
+    unless (scalar(@ARGV) == 1);
+my $name = $ARGV[0];
+
+my @res = `p4 fstat $name | grep headType`;
+
+die "" unless (scalar(@res) == 1);
+
+my $attrs_line = $res[0];
+
+die "" unless($attrs_line =~ /^\.\.\.\sheadType\s(.+)$/);
+
+my $new_attrs = remove_execute_bit($1);
+system("p4 edit -t $new_attrs $name");
