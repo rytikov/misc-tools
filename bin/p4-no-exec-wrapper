@@ -1,0 +1,3 @@
+echo "$1" && p4-remove-exec-bit "$1" && chmod -x "$1"
+
+

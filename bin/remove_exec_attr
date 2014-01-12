@@ -1,0 +1,7 @@
+find . -executable -type f -iname "*.c"   -exec p4-no-exec-wrapper '{}' \;
+
+
+
+
+
+
